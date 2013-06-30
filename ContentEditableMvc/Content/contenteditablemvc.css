@@ -1,0 +1,23 @@
+﻿.contenteditablemvc {
+    
+}
+
+.contenteditablemvc:hover:after {
+  content: ' click to edit';
+  font-style: italic;
+  font-size: 12px;
+  font-family: sans-serif;
+  color: #ccc;
+}
+  
+.contenteditablemvc:hover, .contenteditablemvc:focus {
+  background: #FFFFD3;
+}
+
+.contenteditablemvc:focus {
+  padding: 5px;
+}
+
+.contenteditablemvc:focus:after {
+  content: '';
+}
