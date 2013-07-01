@@ -11,6 +11,6 @@
 <hr />
 
 
-<h2>@Html.ContentEditableFor(true, Model.Id, m => m.Title)</h2>
-<h3>@Html.ContentEditableFor(true, Model.Id, m => m.Subtitle)</h3>
-<p>@Html.ContentEditableFor(true, Model.Id, m => m.ParagraphText)</p>
+<h2>@Html.ContentEditableFor(m => m.Title)</h2>
+<h3>@Html.ContentEditableFor(m => m.Subtitle)</h3>
+<p>@Html.ContentEditableFor(m => m.ParagraphText)</p>

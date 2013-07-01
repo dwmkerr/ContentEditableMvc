@@ -20,18 +20,19 @@ namespace ContentEditableMvcSample.Controllers
             return View(repository.LoadModel());
         }
 
-        public ActionResult SaveChanges(string entityId, string propertyName, string propertyValue)
+        [HttpPost]
+        public ActionResult EditContent(string id, string name, string value)
         {
             //  Get the model.
             var model = (new ExampleRepository()).LoadModel();
 
             //  Check the property to change.
-            if (propertyName == "Title")
-                model.Title = propertyValue;
-            else if (propertyName == "Subtitle")
-                model.Subtitle = propertyValue;
-            else if (propertyName == "ParagraphText")
-                model.ParagraphText = propertyValue;
+            if (name == "Title")
+                model.Title = value;
+            else if (name == "Subtitle")
+                model.Subtitle = value;
+            else if (name == "ParagraphText")
+                model.ParagraphText = value;
 
             //  Save the changes.
             (new ExampleRepository()).SaveModel(model);

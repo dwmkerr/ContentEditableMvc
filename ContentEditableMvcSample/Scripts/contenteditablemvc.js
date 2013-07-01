@@ -1,15 +1,16 @@
 ﻿function saveChanges(cemContent) {
-    alert('save changes ' + cemContent.attr('class'));
     $.ajax({
+        type: 'POST',
         url: cemContent.attr('data-edit-url'),
         data: {
             id: cemContent.attr('data-entity-id'),
             name: cemContent.attr('data-property-name'),
             value: cemContent.html()
         },
-        type: 'POST',
-    }
-    );
+            error: function() {
+                throw new Error('Failed to save changes, check the controller.');
+            }
+    });
 }
 function discardChanges(cemContent) {
     alert('discard changes ' + cemContent.id);
@@ -22,7 +23,7 @@ $(function() {
         $(this).children('.cem-discardchanges').toggleClass('cem-editing');
     });
 
-    $('.cem-wrapper').focusout(function (e) {
+    $('.cem-wrapper').focusout(function () {
         // without a timeout, as soon as we click on the save button, we lose focus, hide it, and lose the click.
         window.setTimeout(function () {
             $(this).children('.cem-savechanges').toggleClass('cem-editing');

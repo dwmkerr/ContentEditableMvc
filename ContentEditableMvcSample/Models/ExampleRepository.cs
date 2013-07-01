@@ -10,8 +10,18 @@ namespace ContentEditableMvcSample.Models
     public class ExampleRepository
     {
         public ExampleModel LoadModel()
-        {
-            if (File.Exists(GetModelPath()) == false)
+        { 
+            try
+            {
+
+            using(var stream = new FileStream(GetModelPath(), FileMode.Open, FileAccess.Read))
+            {
+                var serializer = new XmlSerializer(typeof (ExampleModel));
+                return (ExampleModel)serializer.Deserialize(stream);
+            }
+            }
+            catch (Exception)
+            {
                 return new ExampleModel
                     {
                         Id = Guid.NewGuid().ToString(),
@@ -19,11 +29,6 @@ namespace ContentEditableMvcSample.Models
                         Subtitle = "Example Subtitle",
                         ParagraphText = "Example paragraph."
                     };
-
-            using(var stream = new FileStream(GetModelPath(), FileMode.Open, FileAccess.Read))
-            {
-                var serializer = new XmlSerializer(typeof (ExampleModel));
-                return (ExampleModel)serializer.Deserialize(stream);
             }
         }
 

@@ -7,8 +7,8 @@ namespace ContentEditableMvc
 {
     public static class ContentEditableMvcExtensions
     {
-        public static IHtmlString ContentEditableFor<T>(this HtmlHelper<T> htmlHelper, bool enableEditing,
-            string entityId, Expression<Func<T, object>> modelProperty)
+        public static IHtmlString ContentEditableFor<T>(this HtmlHelper<T> htmlHelper, Expression<Func<T, object>> modelProperty, 
+             string entityId = null, bool enableEditing = true)
         {
             //  Get the content value.
             var contentValue = ModelMetadata.FromLambdaExpression(
@@ -22,12 +22,10 @@ namespace ContentEditableMvc
 
             var savechanges = new TagBuilder("a");
             savechanges.AddCssClass("cem-savechanges");
-            savechanges.SetInnerText("Save");
             savechanges.Attributes["href"] = "#";
 
             var discardchanges = new TagBuilder("a");
             discardchanges.AddCssClass("cem-discardchanges");
-            discardchanges.SetInnerText("Discard");
             discardchanges.Attributes["href"] = "#";
 
             var contenteditable = new TagBuilder("span");

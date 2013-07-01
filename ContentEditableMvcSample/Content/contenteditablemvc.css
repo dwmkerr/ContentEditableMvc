@@ -33,20 +33,24 @@
 
 .cem-savechanges {
     display: none;
-    background: green;
 }
 
 .cem-discardchanges {
     display: none;
-    background: red;
 }
 
 .cem-savechanges.cem-editing {
-    display: inline;
-    background: green;
+    display: inline-block;
+    width: 16px;
+    height: 12px;
+    padding: 4px;
+    background: url('contenteditablemvc/tick.png') no-repeat top left;
 }
 
 .cem-discardchanges.cem-editing {
-    display: inline;
-    background: red;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    padding: 4px;
+    background: url('contenteditablemvc/cross.png') no-repeat top left;
 }
