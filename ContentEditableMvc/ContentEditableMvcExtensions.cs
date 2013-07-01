@@ -20,14 +20,32 @@ namespace ContentEditableMvc
             if(enableEditing == false)
                 return new MvcHtmlString(contentValueText);
 
-            var builder = new TagBuilder("span");
-            builder.Attributes["contenteditable"] = "true";
-            builder.AddCssClass("contenteditablemvc");
-            builder.Attributes["data-property-name"] = ExpressionHelper.GetExpressionText(modelProperty);
-            builder.Attributes["data-edit-url"] = (new UrlHelper(htmlHelper.ViewContext.RequestContext)).Action("EditContent");
-            builder.Attributes["data-entity-id"] = entityId;
-            builder.SetInnerText(contentValueText);
-            return new MvcHtmlString(builder.ToString());
+            var savechanges = new TagBuilder("a");
+            savechanges.AddCssClass("cem-savechanges");
+            savechanges.SetInnerText("Save");
+            savechanges.Attributes["href"] = "#";
+
+            var discardchanges = new TagBuilder("a");
+            discardchanges.AddCssClass("cem-discardchanges");
+            discardchanges.SetInnerText("Discard");
+            discardchanges.Attributes["href"] = "#";
+
+            var contenteditable = new TagBuilder("span");
+            contenteditable.Attributes["contenteditable"] = "true";
+            contenteditable.AddCssClass("cem-content");
+            contenteditable.Attributes["data-property-name"] = ExpressionHelper.GetExpressionText(modelProperty);
+            contenteditable.Attributes["data-edit-url"] = (new UrlHelper(htmlHelper.ViewContext.RequestContext)).Action("EditContent");
+            contenteditable.Attributes["data-entity-id"] = entityId;
+            contenteditable.SetInnerText(contentValueText);
+
+            var wrapper = new TagBuilder("span");
+            wrapper.AddCssClass("cem-wrapper");
+
+            wrapper.InnerHtml = contenteditable.ToString();
+            wrapper.InnerHtml += savechanges.ToString();
+            wrapper.InnerHtml += discardchanges.ToString();
+
+            return new MvcHtmlString(wrapper.ToString());
 
         }
     }

@@ -1,0 +1,52 @@
+﻿.cem {
+    
+}
+
+.cem-content:hover:after {
+  content: ' click to edit';
+  font-style: italic;
+  font-size: 12px;
+  font-family: sans-serif;
+  color: #ccc;
+}
+  
+.cem-content:hover, .cem-content:focus {
+  background: #FFFFD3;
+}
+
+.cem-content:focus {
+  padding: 5px;
+}
+
+.cem-content:focus:after {
+  content: '';
+}
+
+.cem-wrapper {
+    
+}
+
+.cem-wrapper:hover {
+    padding: 4px;
+    border: 1px solid #cccccc;
+}
+
+.cem-savechanges {
+    display: none;
+    background: green;
+}
+
+.cem-discardchanges {
+    display: none;
+    background: red;
+}
+
+.cem-savechanges.cem-editing {
+    display: inline;
+    background: green;
+}
+
+.cem-discardchanges.cem-editing {
+    display: inline;
+    background: red;
+}
