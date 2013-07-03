@@ -1,48 +1,29 @@
-﻿function saveChanges(cemContent) {
+﻿$(function () {
 
-    var data = {
-        PropertyName: cemContent.attr('data-property-name'),
-        NewValue: cemContent.html(),
-        RawModelData: cemContent.attr('data-model-data')
-    };
-
-    $.ajax({
-        type: 'POST',
-        url: cemContent.attr('data-edit-url'),
-        data: data,
-        error: function () {
-            throw new Error('Failed to save changes, check the controller.');
-        }
-    });
-}
-
-function discardChanges(cemContent) {
-    alert('discard changes ' + cemContent.id);
-}
-
-$(function() {
-
-    $('.cem-wrapper').focusin(function () {
-        $(this).toggleClass('cem-editing');
-        $(this).children('.cem-toolbar').toggleClass('cem-editing');
+    var currentEditingWrapper;
+    var currentEditingContent;
+    var originalContent;
+    var focusTarget;
+    
+    $('.cem-content').focus(function () {
+        var cemWrapper = $(this).parent();
+        if (currentEditingWrapper != cemWrapper)
+            startEditing(cemWrapper);
     });
 
-    $('.cem-wrapper').focusout(function () {
-        // without a timeout, as soon as we click on the save button, we lose focus, hide it, and lose the click.
-        window.setTimeout(function (wrapper) {
-            wrapper.toggleClass('cem-editing');
-            wrapper.children('.cem-toolbar').toggleClass('cem-editing');
-        }, 100, $(this));
+    $('.cem-content').blur(function (event) {
+        //// unless the focus target is part of the wrapper, we'll stop editing.
+        //var cemWrapper = $(this).parent();
+        //if (cemWrapper.contains(focusTarget) == false)
+        //    stopEditing();
     });
 
     $('.cem-savechanges').click(function () {
-        var cemcontent = $(this).closest('.cem-wrapper').children('.cem-content').first();
-        saveChanges(cemcontent);
+        saveChanges(currentEditingWrapper);
     });
 
     $('.cem-discardchanges').click(function () {
-        var cemcontent = $(this).closest('.cem-wrapper').children('.cem-content').first();
-        discardChanges(cemcontent);
+        discardChanges();
     });
 
     $('.cem-content').keypress(function (event) {
@@ -59,4 +40,48 @@ $(function() {
         }
         return true;
     });
+    
+    function saveChanges(cemContent) {
+
+        var data = {
+            PropertyName: cemContent.attr('data-property-name'),
+            NewValue: cemContent.html(),
+            RawModelData: cemContent.attr('data-model-data')
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: cemContent.attr('data-edit-url'),
+            data: data,
+            error: function () {
+                throw new Error('Failed to save changes, check the controller.');
+            }
+        });
+    }
+
+    function discardChanges() {
+        if (currentEditingContent!= null) {
+            currentEditingContent.html(originalContent);
+            currentEditingContent.blur();
+        }
+    }
+    
+    function startEditing(cemWrapper) {
+        cemWrapper.addClass('cem-editing');
+        cemWrapper.children('.cem-toolbar').slideDown();
+
+        //  Store the current state.
+        currentEditingWrapper = cemWrapper;
+        currentEditingContent = cemWrapper.children('.cem-content').first();
+        originalContent = currentEditingContent.html();
+    }
+    
+    function stopEditing() {
+        if (currentEditingWrapper == null)
+            return;
+        currentEditingWrapper.removeClass('cem-editing');
+        currentEditingWrapper.children('.cem-toolbar').slideUp();
+        currentEditingWrapper = null;
+        currentEditingContent = null;
+    }
 });
