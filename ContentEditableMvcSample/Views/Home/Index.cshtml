@@ -5,12 +5,80 @@
 }
 
 
-<h2>@Model.Title</h2>
-<h3>@Model.Subtitle</h3>
-<p>@Model.ParagraphText</p>
+<h1>ContentEditableMVC</h1>
+<p>ContentEditableMVC is a package that allows you to present content and make it editable by the end user, inline.</p>
+<p>By using code like <pre>@@Html.ContentEditableFor("DoEdit", m =&gt; m.SomeProperty, new { id = Model.Id})</pre> you can let the user
+    edit a property of a model inline, and save the changes in an action in your controller.
+</p>
 <hr />
-
-
-<h2>@Html.ContentEditableFor(m => m.Title)</h2>
-<h3>@Html.ContentEditableFor(m => m.Subtitle)</h3>
-<p>@Html.ContentEditableFor(m => m.ParagraphText)</p>
+<h2>@Html.ContentEditableFor("EditContent", m => m.Title, new { id = Model.Id})</h2>
+<h3>@Html.ContentEditableFor("EditContent", m => m.Subtitle, new { id = Model.Id})</h3>
+<p>@Html.MultilineContentEditableFor("EditContent", m => m.ParagraphText, new { id = Model.Id})</p>
+<hr />
+<h2>Instructions</h2>
+<p>To use ContentEditableMvc, follow the steps below.</p>
+<ol>
+    <li>Install the ContentEditableMvc Nuget package.</li>
+    <li>Add the contenteditablemvc.js script to your javascript bundles: <br/>
+        <pre>bundles.Add(new ScriptBundle("~/bundles/js").Include(
+                        "~/Scripts/contenteditablemvc.js"));</pre>
+    </li>
+    <li>Add the contenteditablemvc.css style sheet to your style bundles: <br/>
+        <pre>bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css",
+                        "~/Content/contenteditablemvc.css"));</pre>
+    </li>
+    <li>Create an [HttpPost] action in your controller that takes a ContentEditModel: <br />
+        <pre>[HttpPost]
+        public ActionResult EditContent(ContentEditModel contentEdit)
+        {
+        }</pre>
+    </li>
+    <li>The ContentEditModel contains the name of the property to change, its new value, and any data provided in the view.</li>
+    <li>That's it! When the user edits the content and pressed the tick, the action is called and you can 
+        update the model itself in your repository.
+    </li>
+</ol>
+<h2>Advanced</h2>
+<h3>Identifying the Model</h3>
+<p>In many cases, it is not enough to simply have the property name and new value provided to your action, you
+    also need something that identifies the model, such as an ID. The modelData parameter takes an anonymous object
+    that you can populate with any properties you like, to provide this data to the controller. Here's an example:
+</p>
+<pre>@@Html.ContentEditableFor("EditContent", m =&gt; m.Title, new { id = Model.Id})</pre>
+<p>Here we provide the Model.Id property, which we can retrieve with:</p>
+<pre>[HttpPost]
+        public ActionResult EditContent(ContentEditModel contentEdit)
+        {
+            var modelId = contentEdit.ModelData["id"];
+    }
+</pre>
+<p>You can include as much data as you need in the modelData parameter.</p>
+<h3>Enabling or Disabling edits</h3>
+<p>In some circumstances, you might want to enable or disable the editing of the content
+    based on some flag, such as whether the user is an administrator. You can always provide
+    a boolean as the final parameter to ContentEditableFor to allow or disable editing.
+</p>
+<pre>
+@@bool enableEditing = false;
+@@Html.ContentEditableFor("EditContent", m =&gt; m.Title, new { id = Model.Id}, enableEditing)
+</pre>
+<p>In this case, the ContentEditableFor helper will simple render the content as normal.</p>
+<h3>Multiline Edits</h3>
+<p>To allow multiline edits, simple use the 'MultilineContentEditableFor' helper:</p>
+<pre>@@Html.MultilineContentEditableFor("EditContent", m =&gt; m.Title, new { id = Model.Id})</pre>
+<p>It works in exactly the same way as the standard ContentEditableFor, but when the user presses
+    enter, they'll get a newline.
+</p>
+<h3>Formatting</h3>
+<p>The 'NewValue' field of the ContentEditModel can contain HTML, as the contenteditable attribute allows the user to 
+    add the following formatting:
+</p>
+<ul>
+    <li>Bold</li>
+    <li>Italic</li>
+    <li>Underline</li>
+    <li>Paragraphs</li>
+</ul>
+<p>Be aware that the NewValue field can contain html and therefore must be handled in a secure manner, to 
+    prevent cross-site scripting attacks or other threats.
+</p>

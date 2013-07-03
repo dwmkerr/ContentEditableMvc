@@ -1,61 +1,62 @@
-﻿$('.contenteditablemvc').keypress(function (event) {
-    var isEscape = event.which == 27;
-    var isEnter = event.which == 13;
-    var target = event.target;
-    var requestData = {};
-    
-    if (isEnter) {
-        alert('enter pressed on ' + target.id);
-        $.ajax({
-                url: target.getAttribute('data-edit-url'),
-                data: {
-                    id: target.getAttribute('data-entity-id'),
-                    name: target.getAttribute('data-property-name'),
-                    value: target.innerHTML
-                },
-                type: 'POST',
-            }
-        );
-    }
-    if (isEscape) {
-        alert('escape pressed on ' + target.id);
-    }
-});
-/*
-document.addEventListener('keydown', function (event) {
-    var esc = event.which == 27,
-        nl = event.which == 13,
-        el = event.target,
-        input = el.nodeName != 'INPUT' && el.nodeName != 'TEXTAREA',
-        data = {};
+﻿function saveChanges(cemContent) {
 
-    if (input) {
-        if (esc) {
-            // restore state
-            document.execCommand('undo');
-            el.blur();
-        } else if (nl) {
-            // save
-            data[el.getAttribute('data-name')] = el.innerHTML;
+    var data = {
+        PropertyName: cemContent.attr('data-property-name'),
+        NewValue: cemContent.html(),
+        RawModelData: cemContent.attr('data-model-data')
+    };
 
-            // we could send an ajax request to update the field
-            
-            //$.ajax({
-            //  url: window.location.toString(),
-            //  data: data,
-            //  type: 'post'
-            //});
-            
-            log(JSON.stringify(data));
-
-            el.blur();
-            event.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: cemContent.attr('data-edit-url'),
+        data: data,
+        error: function () {
+            throw new Error('Failed to save changes, check the controller.');
         }
-    }
-}, true);
-
-function log(s) {
-    document.getElementById('debug').innerHTML = 'value changed to: ' + s;
+    });
 }
 
-*/
+function discardChanges(cemContent) {
+    alert('discard changes ' + cemContent.id);
+}
+
+$(function () {
+
+    $('.cem-wrapper').focusin(function () {
+        $(this).toggleClass('cem-editing');
+        $(this).children('.cem-toolbar').toggleClass('cem-editing');
+    });
+
+    $('.cem-wrapper').focusout(function () {
+        // without a timeout, as soon as we click on the save button, we lose focus, hide it, and lose the click.
+        window.setTimeout(function (wrapper) {
+            wrapper.toggleClass('cem-editing');
+            wrapper.children('.cem-toolbar').toggleClass('cem-editing');
+        }, 100, $(this));
+    });
+
+    $('.cem-savechanges').click(function () {
+        var cemcontent = $(this).closest('.cem-wrapper').children('.cem-content').first();
+        saveChanges(cemcontent);
+    });
+
+    $('.cem-discardchanges').click(function () {
+        var cemcontent = $(this).closest('.cem-wrapper').children('.cem-content').first();
+        discardChanges(cemcontent);
+    });
+
+    $('.cem-content').keypress(function (event) {
+        if (event.keyCode == 10 || event.keyCode == 13) {
+            var allowMultiline = $(this).attr('data-multiline');
+
+            //  If we're not allowing multiline, save changes instead.
+            if (allowMultiline != "true") {
+                event.preventDefault();
+                saveChanges($(this));
+                $(this).blur();
+                return false;
+            }
+        }
+        return true;
+    });
+});

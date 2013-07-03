@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using ContentEditableMvc;
 using ContentEditableMvcSample.Models;
 
 namespace ContentEditableMvcSample.Controllers
@@ -19,25 +21,36 @@ namespace ContentEditableMvcSample.Controllers
 
             return View(repository.LoadModel());
         }
+        /*
+        [HttpPost]
+        public ActionResult EditContent(string name, string value, string modelData)
+        {
+            var dataDictionary = (new JavaScriptSerializer()).Deserialize<Dictionary<string, string>>(modelData);
+
+            
+        }
+        */
 
         [HttpPost]
-        public ActionResult EditContent(string id, string name, string value)
+        public ActionResult EditContent(ContentEditModel contentEdit)
         {
+            var modelId = contentEdit.ModelData["id"];
+
             //  Get the model.
             var model = (new ExampleRepository()).LoadModel();
 
             //  Check the property to change.
-            if (name == "Title")
-                model.Title = value;
-            else if (name == "Subtitle")
-                model.Subtitle = value;
-            else if (name == "ParagraphText")
-                model.ParagraphText = value;
+            if (contentEdit.PropertyName == "Title")
+                model.Title = contentEdit.NewValue;
+            else if (contentEdit.PropertyName == "Subtitle")
+                model.Subtitle = contentEdit.NewValue;
+            else if (contentEdit.PropertyName == "ParagraphText")
+                model.ParagraphText = contentEdit.NewValue;
 
             //  Save the changes.
             (new ExampleRepository()).SaveModel(model);
 
-            return Json(new {success = true});
+            return Json(new { success = true });
         }
     }
 }
