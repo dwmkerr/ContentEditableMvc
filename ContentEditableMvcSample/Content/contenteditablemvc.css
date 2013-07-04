@@ -26,10 +26,6 @@
     display: none;
 }
 
-.cem-toolbar.cem-editing {
-    display: block;
-}
-
 .cem-savechanges {
     display:inline;
     float: right;

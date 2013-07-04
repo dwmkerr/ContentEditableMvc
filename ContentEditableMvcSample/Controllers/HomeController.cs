@@ -21,16 +21,7 @@ namespace ContentEditableMvcSample.Controllers
 
             return View(repository.LoadModel());
         }
-        /*
-        [HttpPost]
-        public ActionResult EditContent(string name, string value, string modelData)
-        {
-            var dataDictionary = (new JavaScriptSerializer()).Deserialize<Dictionary<string, string>>(modelData);
-
-            
-        }
-        */
-
+        
         [HttpPost]
         public ActionResult EditContent(ContentEditModel contentEdit)
         {

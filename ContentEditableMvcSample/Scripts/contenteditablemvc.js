@@ -3,23 +3,27 @@
     var currentEditingWrapper;
     var currentEditingContent;
     var originalContent;
-    var focusTarget;
     
     $('.cem-content').focus(function () {
         var cemWrapper = $(this).parent();
         if (currentEditingWrapper != cemWrapper)
             startEditing(cemWrapper);
     });
+    
+    function blurTimeout(cemContent) {
+        var cemWrapper = cemContent.parent();
+        stopEditing(cemWrapper);
+    }
 
-    $('.cem-content').blur(function (event) {
-        //// unless the focus target is part of the wrapper, we'll stop editing.
-        //var cemWrapper = $(this).parent();
-        //if (cemWrapper.contains(focusTarget) == false)
-        //    stopEditing();
+    $('.cem-content').blur(function () {
+        var cemContent = $(this);
+        window.setTimeout(function () {
+            blurTimeout(cemContent);
+        }, 100);
     });
 
     $('.cem-savechanges').click(function () {
-        saveChanges(currentEditingWrapper);
+        saveChanges(currentEditingContent);
     });
 
     $('.cem-discardchanges').click(function () {
@@ -59,6 +63,7 @@
         });
     }
 
+    // todo remove dependency on global variables for the content object, only store the old html
     function discardChanges() {
         if (currentEditingContent!= null) {
             currentEditingContent.html(originalContent);
@@ -68,7 +73,7 @@
     
     function startEditing(cemWrapper) {
         cemWrapper.addClass('cem-editing');
-        cemWrapper.children('.cem-toolbar').slideDown();
+        cemWrapper.children('.cem-toolbar').show();
 
         //  Store the current state.
         currentEditingWrapper = cemWrapper;
@@ -76,12 +81,8 @@
         originalContent = currentEditingContent.html();
     }
     
-    function stopEditing() {
-        if (currentEditingWrapper == null)
-            return;
-        currentEditingWrapper.removeClass('cem-editing');
-        currentEditingWrapper.children('.cem-toolbar').slideUp();
-        currentEditingWrapper = null;
-        currentEditingContent = null;
+    function stopEditing(cemWrapper) {
+        cemWrapper.removeClass('cem-editing');
+        cemWrapper.children('.cem-toolbar').hide();
     }
 });
