@@ -65,6 +65,8 @@
 
     // todo remove dependency on global variables for the content object, only store the old html
     function discardChanges() {
+        
+        //todo use a dictionary to make sure we restore the correct changes for a cemWrapper param
         if (currentEditingContent!= null) {
             currentEditingContent.html(originalContent);
             currentEditingContent.blur();
