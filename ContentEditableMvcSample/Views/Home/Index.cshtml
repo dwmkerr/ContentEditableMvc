@@ -10,6 +10,7 @@
 <p>By using code like <pre>@@Html.ContentEditableFor("DoEdit", m =&gt; m.SomeProperty, new { id = Model.Id})</pre> you can let the user
     edit a property of a model inline, and save the changes in an action in your controller.
 </p>
+<p>Below are some example elements built with ContentEditableMvc</p>
 <hr />
 <h2>@Html.ContentEditableFor("EditContent", m => m.Title, new { id = Model.Id})</h2>
 <h3>@Html.ContentEditableFor("EditContent", m => m.Subtitle, new { id = Model.Id})</h3>
@@ -83,6 +84,5 @@
     prevent cross-site scripting attacks or other threats.
 </p>
 <ul>
-    <li>SlideUp/Out toolbar</li>
     <li>On lose focus from wrapper div, reset content (i.e. keep content if change focus to toolbar button in wrapper div)</li>
 </ul>

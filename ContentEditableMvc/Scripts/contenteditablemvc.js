@@ -2,7 +2,7 @@
 
     var currentEditingWrapper;
     var currentEditingContent;
-    var originalContent;
+    var originalContentDict = {};
 
     $('.cem-content').focus(function () {
         var cemWrapper = $(this).parent();
@@ -13,6 +13,8 @@
     function blurTimeout(cemContent) {
         var cemWrapper = cemContent.parent();
         stopEditing(cemWrapper);
+        //  We can discard the changes safely - if we've lost focus by hitting save, they're already saved.
+        discardChanges(cemWrapper);
     }
 
     $('.cem-content').blur(function () {
@@ -27,7 +29,8 @@
     });
 
     $('.cem-discardchanges').click(function () {
-        discardChanges();
+        var cemWrapper = $(this).closest('.cem-wrapper');
+        discardChanges(cemWrapper);
     });
 
     $('.cem-content').keypress(function (event) {
@@ -47,6 +50,9 @@
 
     function saveChanges(cemContent) {
 
+        //  Clear the entry in the original content dictionary (we won't need to restore it).
+        originalContentDict[cemContent.parent()] = null;
+
         var data = {
             PropertyName: cemContent.attr('data-property-name'),
             NewValue: cemContent.html(),
@@ -64,11 +70,11 @@
     }
 
     // todo remove dependency on global variables for the content object, only store the old html
-    function discardChanges() {
-        if (currentEditingContent != null) {
-            currentEditingContent.html(originalContent);
-            currentEditingContent.blur();
-        }
+    function discardChanges(cemWrapper) {
+        //  If we have content to restore for the cem, restore it now.
+        if (originalContentDict != null && originalContentDict[cemWrapper] != null)
+            cemWrapper.find('.cem-content').html(originalContentDict[cemWrapper]);
+        cemWrapper.blur();
     }
 
     function startEditing(cemWrapper) {
@@ -78,7 +84,7 @@
         //  Store the current state.
         currentEditingWrapper = cemWrapper;
         currentEditingContent = cemWrapper.children('.cem-content').first();
-        originalContent = currentEditingContent.html();
+        originalContentDict[cemWrapper] = currentEditingContent.html();
     }
 
     function stopEditing(cemWrapper) {
