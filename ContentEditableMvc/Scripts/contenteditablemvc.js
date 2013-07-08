@@ -1,8 +1,6 @@
 ﻿$(function () {
 
     var currentEditingWrapper;
-    var currentEditingContent;
-    var originalContentDict = {};
 
     $('.cem-content').focus(function () {
         var cemWrapper = $(this).parent();
@@ -13,8 +11,6 @@
     function blurTimeout(cemContent) {
         var cemWrapper = cemContent.parent();
         stopEditing(cemWrapper);
-        //  We can discard the changes safely - if we've lost focus by hitting save, they're already saved.
-        discardChanges(cemWrapper);
     }
 
     $('.cem-content').blur(function () {
@@ -25,13 +21,11 @@
     });
 
     $('.cem-savechanges').click(function () {
-        saveChanges(currentEditingContent);
+        var cemWrapper = $(this).closest('.cem-wrapper');
+        saveChanges(cemWrapper);
     });
 
-    $('.cem-discardchanges').click(function () {
-        var cemWrapper = $(this).closest('.cem-wrapper');
-        discardChanges(cemWrapper);
-    });
+    //  No need for .cem-discardchanges - clicking it blurs the input, so it discards the changes anyway.
 
     $('.cem-content').keypress(function (event) {
         if (event.keyCode == 10 || event.keyCode == 13) {
@@ -48,10 +42,11 @@
         return true;
     });
 
-    function saveChanges(cemContent) {
+    function saveChanges(cemWrapper) {
 
-        //  Clear the entry in the original content dictionary (we won't need to restore it).
-        originalContentDict[cemContent.parent()] = null;
+        //  Clear the original value, so we don't reset it.
+        var cemContent = cemWrapper.find('.cem-content');
+        cemWrapper.data('original', null);
 
         var data = {
             PropertyName: cemContent.attr('data-property-name'),
@@ -69,26 +64,25 @@
         });
     }
 
-    // todo remove dependency on global variables for the content object, only store the old html
-    function discardChanges(cemWrapper) {
-        //  If we have content to restore for the cem, restore it now.
-        if (originalContentDict != null && originalContentDict[cemWrapper] != null)
-            cemWrapper.find('.cem-content').html(originalContentDict[cemWrapper]);
-        cemWrapper.blur();
-    }
-
     function startEditing(cemWrapper) {
         cemWrapper.addClass('cem-editing');
         cemWrapper.children('.cem-toolbar').show();
+        var cemContent = cemWrapper.find('cem-content');
 
         //  Store the current state.
         currentEditingWrapper = cemWrapper;
-        currentEditingContent = cemWrapper.children('.cem-content').first();
-        originalContentDict[cemWrapper] = currentEditingContent.html();
+        cemWrapper.data('original', cemContent.html());
     }
 
     function stopEditing(cemWrapper) {
         cemWrapper.removeClass('cem-editing');
         cemWrapper.children('.cem-toolbar').hide();
+
+        //  Get the content.
+        var cemContent = cemWrapper.find('.cem-content');
+
+        //  If we have an original value, set it.
+        if (cemWrapper.data('original') != null)
+            cemContent.html(cemWrapper.data('original'));
     }
 });

@@ -244,7 +244,7 @@ namespace ContentEditableMvc
             contenteditable.Attributes["data-edit-url"] = actionUrl;
             contenteditable.Attributes["data-model-data"] = modelDataJson;
             contenteditable.Attributes["data-multiline"] = allowMultiline ? "true" : "false";
-            contenteditable.SetInnerText(content);
+            contenteditable.InnerHtml = content;
 
             var wrapper = new TagBuilder("div");
             wrapper.AddCssClass("cem-wrapper");
