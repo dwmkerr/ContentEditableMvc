@@ -27,7 +27,8 @@ namespace ContentEditableMvcSample.Models
                         Id = Guid.NewGuid().ToString(),
                         Title = "Example Model",
                         Subtitle = "Example Subtitle",
-                        ParagraphText = "Example paragraph."
+                        ParagraphText = "Example paragraph.",
+                        Counter = 1
                     };
             }
         }

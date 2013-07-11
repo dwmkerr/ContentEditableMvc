@@ -14,5 +14,7 @@ namespace ContentEditableMvcSample.Models
         public string Subtitle { get; set; }
 
         public string ParagraphText { get; set; }
+
+        public int Counter { get; set; }
     }
 }

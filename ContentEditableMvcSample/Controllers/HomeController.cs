@@ -37,6 +37,8 @@ namespace ContentEditableMvcSample.Controllers
                 model.Subtitle = contentEdit.NewValue;
             else if (contentEdit.PropertyName == "ParagraphText")
                 model.ParagraphText = contentEdit.NewValue;
+            else if (contentEdit.PropertyName == "Counter")
+                model.Counter = int.Parse(contentEdit.NewValue);
 
             //  Save the changes.
             (new ExampleRepository()).SaveModel(model);

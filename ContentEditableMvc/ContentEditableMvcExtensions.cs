@@ -16,18 +16,21 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="controllerName">Name of the controller to use to save changes.</param>
         /// <param name="expression">The expression that selects the model property that will be editable.</param>
-        /// <param name="modelData">The model data, which is passed to the action. This would typically be soemthing that 
+        /// <param name="modelData">The model data, which is passed to the action. This would typically be soemthing that
         /// identifies the model, such as new { id = Model.Id }.</param>
         /// <param name="enableEditing">if set to <c>true</c> enable editing, otherwise, display the content
         /// as standard read-only text.</param>
-        /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString ContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName, string controllerName,
-                                                        Expression<Func<T, object>>  expression, object modelData, bool enableEditing)
+        /// <returns>
+        /// The Html for the content, which can be edited.
+        /// </returns>
+        public static IHtmlString ContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName, string controllerName,
+                                                        Expression<Func<TModel, TProperty>>  expression, object modelData, bool enableEditing)
         {
             return InternalContentEditableFor(htmlHelper, actionName, controllerName, expression, modelData, enableEditing, false);
         }
@@ -35,7 +38,8 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="controllerName">Name of the controller to use to save changes.</param>
@@ -43,8 +47,8 @@ namespace ContentEditableMvc
         /// <param name="modelData">The model data, which is passed to the action. This would typically be soemthing that 
         /// identifies the model, such as new { id = Model.Id }.</param>
         /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString ContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName, string controllerName,
-                                                        Expression<Func<T, object>> expression, object modelData)
+        public static IHtmlString ContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName, string controllerName,
+                                                        Expression<Func<TModel, TProperty>> expression, object modelData)
         {
             //  Call the main function.
             return InternalContentEditableFor(htmlHelper, actionName, controllerName, expression, modelData, true, false);
@@ -53,7 +57,8 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="expression">The expression that selects the model property that will be editable.</param>
@@ -62,8 +67,8 @@ namespace ContentEditableMvc
         /// <param name="enableEditing">if set to <c>true</c> enable editing, otherwise, display the content
         /// as standard read-only text.</param>
         /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString ContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName, 
-                                                        Expression<Func<T, object>> expression, object modelData, bool enableEditing)
+        public static IHtmlString ContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName, 
+                                                        Expression<Func<TModel, TProperty>> expression, object modelData, bool enableEditing)
         {
             //  Call the main function.
             return InternalContentEditableFor(htmlHelper, actionName, null, expression, modelData, enableEditing, false);
@@ -72,15 +77,16 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="expression">The expression that selects the model property that will be editable.</param>
         /// <param name="modelData">The model data, which is passed to the action. This would typically be soemthing that 
         /// identifies the model, such as new { id = Model.Id }.</param>
         /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString ContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName,
-                                                        Expression<Func<T, object>> expression, object modelData)
+        public static IHtmlString ContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName,
+                                                        Expression<Func<TModel, TProperty>> expression, object modelData)
         {
             //  Call the main function.
             return InternalContentEditableFor(htmlHelper, actionName, null, expression, modelData, true, false);
@@ -89,7 +95,8 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Multiline Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="controllerName">Name of the controller to use to save changes.</param>
@@ -99,8 +106,8 @@ namespace ContentEditableMvc
         /// <param name="enableEditing">if set to <c>true</c> enable editing, otherwise, display the content
         /// as standard read-only text.</param>
         /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString MultilineContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName, string controllerName,
-                                                        Expression<Func<T, object>> expression, object modelData, bool enableEditing)
+        public static IHtmlString MultilineContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName, string controllerName,
+                                                        Expression<Func<TModel, TProperty>> expression, object modelData, bool enableEditing)
         {
             return InternalContentEditableFor(htmlHelper, actionName, controllerName, expression, modelData, enableEditing, true);
         }
@@ -108,7 +115,8 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Multiline Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="controllerName">Name of the controller to use to save changes.</param>
@@ -116,8 +124,8 @@ namespace ContentEditableMvc
         /// <param name="modelData">The model data, which is passed to the action. This would typically be soemthing that 
         /// identifies the model, such as new { id = Model.Id }.</param>
         /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString MultilineContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName, string controllerName,
-                                                        Expression<Func<T, object>> expression, object modelData)
+        public static IHtmlString MultilineContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName, string controllerName,
+                                                        Expression<Func<TModel, TProperty>> expression, object modelData)
         {
             //  Call the main function.
             return InternalContentEditableFor(htmlHelper, actionName, controllerName, expression, modelData, true, true);
@@ -126,7 +134,8 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Multiline Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="expression">The expression that selects the model property that will be editable.</param>
@@ -135,8 +144,8 @@ namespace ContentEditableMvc
         /// <param name="enableEditing">if set to <c>true</c> enable editing, otherwise, display the content
         /// as standard read-only text.</param>
         /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString MultilineContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName,
-                                                        Expression<Func<T, object>> expression, object modelData, bool enableEditing)
+        public static IHtmlString MultilineContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName,
+                                                        Expression<Func<TModel, TProperty>> expression, object modelData, bool enableEditing)
         {
             //  Call the main function.
             return InternalContentEditableFor(htmlHelper, actionName, null, expression, modelData, enableEditing, true);
@@ -145,15 +154,16 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Multiline Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="expression">The expression that selects the model property that will be editable.</param>
         /// <param name="modelData">The model data, which is passed to the action. This would typically be soemthing that 
         /// identifies the model, such as new { id = Model.Id }.</param>
         /// <returns>The Html for the content, which can be edited.</returns>
-        public static IHtmlString MultilineContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName,
-                                                        Expression<Func<T, object>> expression, object modelData)
+        public static IHtmlString MultilineContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName,
+                                                        Expression<Func<TModel, TProperty>> expression, object modelData)
         {
             //  Call the main function.
             return InternalContentEditableFor(htmlHelper, actionName, null, expression, modelData, true, true);
@@ -162,7 +172,8 @@ namespace ContentEditableMvc
         /// <summary>
         /// Creates a Content Editable element, that allows the user to edit content inline.
         /// </summary>
-        /// <typeparam name="T">The model type.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="htmlHelper">The HTML helper.</param>
         /// <param name="actionName">Name of the action to call to save changes.</param>
         /// <param name="controllerName">Name of the controller to use to save changes.</param>
@@ -180,8 +191,8 @@ namespace ContentEditableMvc
         /// or
         /// An expression that selects the model property must be provided.
         /// </exception>
-        private static IHtmlString InternalContentEditableFor<T>(this HtmlHelper<T> htmlHelper, string actionName, string controllerName,
-                                                                 Expression<Func<T, object>> expression, object modelData, bool enableEditing,
+        private static IHtmlString InternalContentEditableFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, string actionName, string controllerName,
+                                                                 Expression<Func<TModel, TProperty>> expression, object modelData, bool enableEditing,
                                                                  bool allowMultiline)
         {
             //  First, we'll create the URL to the action.
